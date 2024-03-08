@@ -2,6 +2,7 @@ import pygame
 import numpy as np
 from player import Player
 from level import Level
+from camera import Camera
  
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -27,6 +28,11 @@ GRAVITY = 3
 # Create the level
 l1 = Level(screen_size, TILE_SIZE, "./test1.tmx")
 
+# Create camera
+c1 = Camera(0, 0)
+c1.set_scroll_speed(np.array([0, 0]))
+print(((TILE_SIZE[0]/2) + 640)/20)
+
 
 def collision_test(rect, tiles):
     hit_list = []
@@ -39,17 +45,17 @@ def move(rect, movement, tiles):
     collision_types = {'top': False, 'bottom': False, 'right': False, 'left': False}
     rect.x += movement[0]
     hit_list = collision_test(rect, tiles)
-    print(hit_list)
     for tile in hit_list:
         if movement[0] > 0:
             rect.right = tile.left
             collision_types['right'] = True
+            c1.set_scroll_speed(np.array([0, 0]))
         elif movement[0] < 0:
             rect.left = tile.right
             collision_types['left'] = True
+            c1.set_scroll_speed(np.array([0, 0]))
     rect.y += movement[1]
     hit_list = collision_test(rect, tiles)
-    print(hit_list)
     for tile in hit_list:
         if movement[1] > 0:
             rect.bottom = tile.top
@@ -64,6 +70,7 @@ def move(rect, movement, tiles):
 running = True
 while running:
     dt = clock.tick(60)
+    c1.add_scroll(p1.getRect(), TILE_SIZE)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -73,20 +80,21 @@ while running:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
         p1.set_speed(np.array([0, -1]))
-        #p1.move()
+
     if keys[pygame.K_s]:
         p1.set_speed(np.array([0, 1]))
-        #p1.move()
+
     if keys[pygame.K_a]:
         p1.set_speed(np.array([-1, 0]))
-        #p1.move()
+
     if keys[pygame.K_d]:
         p1.set_speed(np.array([1, 0]))
-        #p1.move()
+
+
      
 
     # Gravity Physics
-    if p1.speed[0] >= 6:
+    if p1.speed[1] >= 6:
         p1.set_speed(np.array([p1.speed[0], p1.speed[1]]))
     else:
         p1.set_speed(np.array([p1.speed[0], p1.speed[1] + (GRAVITY * dt/1000)]))
@@ -100,7 +108,7 @@ while running:
     tile_rect = []
     for layer in l1.level.layers:
         for x, y, surf in layer.tiles():
-            screen.blit(surf, dest=(x*TILE_SIZE[0], y*TILE_SIZE[1]))
+            screen.blit(surf, dest=(x*TILE_SIZE[0] - c1.pos[0], y*TILE_SIZE[1] - c1.pos[1]))
             tile_rect.append(pygame.Rect(x*TILE_SIZE[0], y*TILE_SIZE[1], TILE_SIZE[0], TILE_SIZE[1]))
 
     p1.rectangle, collisions = move(p1.getRect(), p1.speed * p1.speedMultiplier, tile_rect)
@@ -111,12 +119,13 @@ while running:
 
      
     # draw to the screen
-    pygame.draw.rect(screen, pygame.Color(255, 255, 255), p1.getRect())
+    pygame.draw.rect(screen, pygame.Color(255, 255, 255), p1.getRect().move(-c1.pos[0], 0))
  
 
     # flip() updates the screen to make our changes visible
     pygame.display.flip()
      
     # how many updates per second
- 
+
+
 pygame.quit()
