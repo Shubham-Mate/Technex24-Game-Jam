@@ -3,7 +3,7 @@ import pygame
 
 class Player:
     
-    def __init__(self, pos, size, spritePath):
+    def __init__(self, pos, size, spritePath, ability):
         self.pos = pos
         self.size = size
         self.sprite_path = spritePath
@@ -11,6 +11,7 @@ class Player:
         self.speed = np.array([0, 0], dtype='float16')
         self.rectangle = pygame.Rect(pos[0], pos[1], size[0], size[1])
         self.speedMultiplier = 2
+        self.ability = ability
 
     def set_speed(self, speed):
         self.speed = speed
