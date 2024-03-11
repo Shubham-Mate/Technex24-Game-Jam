@@ -25,7 +25,7 @@ clock = pygame.time.Clock()
 GRAVITY = 3
 
 # Create the level manager
-lm1 = LevelManager(Level(screen_size, TILE_SIZE, "./test2.tmx", pygame.Color(235, 113, 26), "hecker"), Level(screen_size, TILE_SIZE, "./test2.tmx", pygame.Color(68, 235, 26), 'weapons'), Level(screen_size, TILE_SIZE, "./test2.tmx", pygame.Color(24, 107, 222), 'water'), Level(screen_size, TILE_SIZE, "./test2.tmx", pygame.Color(224, 43, 155), 'climber'))
+lm1 = LevelManager(Level(screen_size, TILE_SIZE, "./test2.tmx", pygame.Color(235, 113, 26), "hecker"), Level(screen_size, TILE_SIZE, "./test2.tmx", pygame.Color(68, 235, 26), 'soldier'), Level(screen_size, TILE_SIZE, "./test2.tmx", pygame.Color(24, 107, 222), 'scientist'), Level(screen_size, TILE_SIZE, "./test2.tmx", pygame.Color(224, 43, 155), 'thief'))
 lvl_dict = {"orange": 0, "green": 1, "blue": 2, "pink": 3}
 
 def collision_test(rect, tiles):
@@ -145,7 +145,7 @@ while running:
 
      
     # draw to the screen
-    pygame.draw.rect(screen, lm1.levels[lm1.levelInd].color_identifier, lm1.levels[lm1.levelInd].p1.getRect().move(-lm1.levels[lm1.levelInd].c1.pos[0], 0))
+    screen.blit(lm1.levels[lm1.levelInd].p1.sprite, (lm1.levels[lm1.levelInd].p1.rectangle.x - lm1.levels[lm1.levelInd].c1.pos[0], lm1.levels[lm1.levelInd].p1.rectangle.y - lm1.levels[lm1.levelInd].c1.pos[1]))
  
 
     # flip() updates the screen to make our changes visible

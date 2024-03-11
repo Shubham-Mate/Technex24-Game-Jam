@@ -9,7 +9,7 @@ class Level:
         self.screen_size = screen_size
         self.tile_size = tile_size
         self.level = load_pygame(level_name)
-        self.p1 = Player(np.array([0, 0], dtype='float32'), np.array([32, 32]), "dummy", ability)
+        self.p1 = Player(np.array([0, 0], dtype='float32'), np.array([32, 48]), "dummy", ability)
         self.c1 = Camera(0, 0)
         self.color_identifier = color
 
@@ -30,9 +30,14 @@ class LevelManager:
             self.levelInd = 3
 
     def swapPlayers(self, ind1, ind2):
-        temp = self.levels[ind1].p1
+        temp1 = self.levels[ind1].p1
+        temp2 = self.levels[ind2].p1
+        temp1_rect = temp1.rectangle
+        temp2_rect = temp2.rectangle
         self.levels[ind1].p1 = self.levels[ind2].p1
-        self.levels[ind2].p1 = temp
+        self.levels[ind2].p1 = temp1
+        self.levels[ind1].p1.rectangle = temp1_rect
+        self.levels[ind2].p1.rectangle = temp2_rect
 
     
 
