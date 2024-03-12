@@ -3,14 +3,14 @@ import pygame
 
 class Player:
     
-    def __init__(self, pos, size, spritePath, ability):
+    def __init__(self, pos, size, spritePath, ability, sm):
         self.pos = pos
         self.size = size
         self.sprite_path = spritePath
         self.sprite = None
-        self.speed = np.array([0, 0], dtype='float16')
+        self.speed = np.array([0, 0], dtype='int16')
         self.rectangle = pygame.Rect(pos[0], pos[1], size[0], size[1])
-        self.speedMultiplier = 2
+        self.speedMultiplier = sm
         self.ability = ability
         self.sprite = pygame.image.load(f"./{ability}.png")
 

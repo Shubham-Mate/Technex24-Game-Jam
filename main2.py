@@ -4,7 +4,8 @@ from player import Player
 from level import Level
 from camera import Camera
 from level import LevelManager
- 
+from pygame.locals import *
+
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -22,10 +23,10 @@ pygame.display.set_caption("pygame Test")
 # clock is used to set a max fps
 clock = pygame.time.Clock()
 
-GRAVITY = 3
+GRAVITY = 1
 
 # Create the level manager
-lm1 = LevelManager(Level(screen_size, TILE_SIZE, "./level1.tmx", pygame.Color(235, 113, 26), "hecker", 3), Level(screen_size, TILE_SIZE, "./level1.tmx", pygame.Color(68, 235, 26), 'soldier', 5), Level(screen_size, TILE_SIZE, "./level1.tmx", pygame.Color(24, 107, 222), 'scientist', 3), Level(screen_size, TILE_SIZE, "./level1.tmx", pygame.Color(224, 43, 155), 'thief', 4))
+lm1 = LevelManager(Level(screen_size, TILE_SIZE, "./test2.tmx", pygame.Color(235, 113, 26), "hecker"), Level(screen_size, TILE_SIZE, "./test2.tmx", pygame.Color(68, 235, 26), 'soldier'), Level(screen_size, TILE_SIZE, "./test2.tmx", pygame.Color(24, 107, 222), 'water'), Level(screen_size, TILE_SIZE, "./test2.tmx", pygame.Color(224, 43, 155), 'climber'))
 lvl_dict = {"orange": 0, "green": 1, "blue": 2, "pink": 3}
 
 def collision_test(rect, tiles):
@@ -68,15 +69,14 @@ while running:
     dt = clock.tick(60)
     lm1.levels[lm1.levelInd].c1.add_scroll(lm1.levels[lm1.levelInd].p1.getRect(), TILE_SIZE)
 
-
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w] and onGround:
-        vertical_speed = -1.75
+        vertical_speed = -50
         onGround = False
     elif keys[pygame.K_s]:
         vertical_speed = 1
     else:
-        vertical_speed = lm1.levels[lm1.levelInd].p1.speed[1]
+        vertical_speed = GRAVITY
     if keys[pygame.K_a]:
         horizontal_speed = -1
     elif keys[pygame.K_d]:
@@ -101,47 +101,21 @@ while running:
     # Draw the level
     tile_rect = []
     obj_rect = []
-    teleporter_rect = []
     obj_dict = {}
-    teleporter_dict = {}
-    background_layer = lm1.levels[lm1.levelInd].level.layers[0]
-    tile_layer = lm1.levels[lm1.levelInd].level.layers[1]
-    obj_layer = lm1.levels[lm1.levelInd].level.layers[2]
-    door_layer = lm1.levels[lm1.levelInd].level.layers[3]
-    teleport_layer = lm1.levels[lm1.levelInd].level.layers[4]
-    shard_layer = lm1.levels[lm1.levelInd].level.layers[5]
-    
-
-
-    for x, y, surf in background_layer.tiles():
-        screen.blit(surf, dest=(x*TILE_SIZE[0] - lm1.levels[lm1.levelInd].c1.pos[0], y*TILE_SIZE[1] - lm1.levels[lm1.levelInd].c1.pos[1]))
-    
+    tile_layer = lm1.levels[lm1.levelInd].level.layers[0]
+    obj_layer = lm1.levels[lm1.levelInd].level.layers[1]
     for x, y, surf in tile_layer.tiles():
         screen.blit(surf, dest=(x*TILE_SIZE[0] - lm1.levels[lm1.levelInd].c1.pos[0], y*TILE_SIZE[1] - lm1.levels[lm1.levelInd].c1.pos[1]))
         tile_rect.append(pygame.Rect(x*TILE_SIZE[0], y*TILE_SIZE[1], TILE_SIZE[0], TILE_SIZE[1]))
-    
+
+    lm1.levels[lm1.levelInd].p1.rectangle, collisions = move(lm1.levels[lm1.levelInd].p1.getRect(), lm1.levels[lm1.levelInd].p1.speed * lm1.levels[lm1.levelInd].p1.speedMultiplier, tile_rect)
 
     for obj in obj_layer:
         screen.blit(obj.image, dest=(obj.x - lm1.levels[lm1.levelInd].c1.pos[0], obj.y - lm1.levels[lm1.levelInd].c1.pos[1]))
         obj_rect.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
         obj_dict[obj.name] = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
     
-    for door in door_layer:
-        screen.blit(door.image, dest=(door.x - lm1.levels[lm1.levelInd].c1.pos[0], door.y - lm1.levels[lm1.levelInd].c1.pos[1]))
-        if door.properties['Passable'] != lm1.levels[lm1.levelInd].p1.ability:
-            tile_rect.append(pygame.Rect(door.x, door.y, door.width, door.height))
-
-    for teleporter in teleport_layer:
-        screen.blit(teleporter.image, dest=(teleporter.x - lm1.levels[lm1.levelInd].c1.pos[0], teleporter.y - lm1.levels[lm1.levelInd].c1.pos[1]))
-        teleporter_rect.append(pygame.Rect(teleporter.x, teleporter.y, teleporter.width, teleporter.height))
-        teleporter_dict[(int(teleporter.x), int(teleporter.y))] = teleporter
-
-    
     hit_list = collision_test(lm1.levels[lm1.levelInd].p1.rectangle, obj_rect)
-    teleporter_hit_list = collision_test(lm1.levels[lm1.levelInd].p1.rectangle, teleporter_rect)
-    lm1.levels[lm1.levelInd].p1.rectangle, collisions = move(lm1.levels[lm1.levelInd].p1.getRect(), lm1.levels[lm1.levelInd].p1.speed * lm1.levels[lm1.levelInd].p1.speedMultiplier, tile_rect)
-
-
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -166,29 +140,20 @@ while running:
                                             lm1.swapPlayers(lvl_dict[key], lvl_dict[key2])
                                             break
                             break
-            if event.key == pygame.K_e:
-                if lm1.levels[lm1.levelInd].p1.ability == 'scientist':
-                    for re in teleporter_hit_list:
-                        for t in teleport_layer:
-                            if teleporter_dict[(re.x, re.y)].properties['to'] == t.name:
-                                lm1.levels[lm1.levelInd].p1.rectangle.x = t.x
-                                lm1.levels[lm1.levelInd].p1.rectangle.y = t.y
-
 
 
                 
 
     if collisions['bottom']:
-        onGround = True
+        onGround=True
         lm1.levels[lm1.levelInd].p1.set_speed(np.array([lm1.levels[lm1.levelInd].p1.speed[0], 0]))
 
 
 
      
     # draw to the screen
-    screen.blit(lm1.levels[lm1.levelInd].p1.sprite, (lm1.levels[lm1.levelInd].p1.rectangle.x - lm1.levels[lm1.levelInd].c1.pos[0], lm1.levels[lm1.levelInd].p1.rectangle.y - lm1.levels[lm1.levelInd].c1.pos[1]))
-    mask_outline = np.array(pygame.mask.from_surface(lm1.levels[lm1.levelInd].p1.sprite).outline())
-    pygame.draw.polygon(screen, lm1.levels[lm1.levelInd].color_identifier, mask_outline + (lm1.levels[lm1.levelInd].p1.rectangle.x - lm1.levels[lm1.levelInd].c1.pos[0], lm1.levels[lm1.levelInd].p1.rectangle.y - lm1.levels[lm1.levelInd].c1.pos[1]), 3)
+    pygame.draw.rect(screen, lm1.levels[lm1.levelInd].color_identifier, lm1.levels[lm1.levelInd].p1.getRect().move(-lm1.levels[lm1.levelInd].c1.pos[0], 0))
+ 
 
     # flip() updates the screen to make our changes visible
     pygame.display.flip()

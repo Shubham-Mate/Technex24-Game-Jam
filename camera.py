@@ -13,3 +13,4 @@ class Camera:
 
     def add_scroll(self, p_rect, TILE_SIZE):
         self.pos[0] += (p_rect.x - self.pos[0] - (TILE_SIZE[0]/2) - 640 + 100)/20
+        self.pos[0] = max(self.pos[0], 0)
