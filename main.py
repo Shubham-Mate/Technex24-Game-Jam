@@ -99,7 +99,7 @@ def main_menu():
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
-        MENU_TEXT = get_font(100).render("MAIN MENU", True, "#FFBD00")
+        MENU_TEXT = get_font(80).render("Dimensional Drifters", True, "#FFBD00")
         MENU_RECT = MENU_TEXT.get_rect(center=(screen.get_width() / 2, screen.get_height() / 6))
 
         PLAY_BUTTON = Button(image=pygame.image.load("assets/images/Rect.png"), pos=(screen.get_width() / 2, (screen.get_height() / 2) - 150), 
@@ -219,6 +219,8 @@ def play():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+                pygame.quit()
+                sys.exit()
             if event.type == pygame.RESIZABLE:
                 screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
             if event.type == pygame.KEYDOWN:
