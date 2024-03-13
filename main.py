@@ -25,7 +25,7 @@ BG = pygame.image.load("assets/images/Background.png")
  
 # create a window
 screen = pygame.display.set_mode(screen_size, pygame.RESIZABLE)
-pygame.display.set_caption("MENU")
+pygame.display.set_caption("Dimensional Drifters")
  
 # clock is used to set a max fps
 clock = pygame.time.Clock()
@@ -210,7 +210,7 @@ onWall  = False
 
 
 def play():
-    global screen, onGround, gamestate
+    global screen, onGround, gamestate, onWall
     running = True
     global pause
     
@@ -314,13 +314,14 @@ def play():
                             if hit_list[0].x == value.x and hit_list[0].y == value.y:
                                 hit_list_2 = collision_test(lm1.levels[lvl_dict[key]].p1.rectangle, lm1.levels[lvl_dict[key]].obj_rect)
                                 if len(hit_list_2) > 0:
-                                    for key2, value2 in lm1.levels[lvl_dict[key]].obj_dict.items():
-                                        if hit_list[0].x == value.x and hit_list[0].y == value.y:
-                                            print(key2)
-                                            print(lvl_dict[key2], lm1.levelInd)
-                                            if lvl_dict[key2] == lm1.levelInd:
-                                                lm1.swapPlayers(lvl_dict[key], lvl_dict[key2])
-                                                break
+                                    for key2, values2 in lm1.levels[lvl_dict[key]].obj_dict.items():
+                                        for value2 in values2:
+                                            if hit_list_2[0].x == value2.x and hit_list_2[0].y == value2.y:
+                                                print(key2)
+                                                print(lvl_dict[key2], lm1.levelInd)
+                                                if lvl_dict[key2] == lm1.levelInd:
+                                                    lm1.swapPlayers(lvl_dict[key], lvl_dict[key2])
+                                                    break
                                 break
             if event.key == pygame.K_e:
                 if lm1.levels[lm1.levelInd].p1.ability == 'scientist':
