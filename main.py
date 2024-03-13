@@ -25,7 +25,7 @@ clock = pygame.time.Clock()
 GRAVITY = 3
 
 # Create the level manager
-lm1 = LevelManager(Level(screen_size, TILE_SIZE, "./level1.tmx", pygame.Color(235, 113, 26), "hecker", 3), Level(screen_size, TILE_SIZE, "./level1.tmx", pygame.Color(68, 235, 26), 'soldier', 5), Level(screen_size, TILE_SIZE, "./level1.tmx", pygame.Color(24, 107, 222), 'scientist', 3), Level(screen_size, TILE_SIZE, "./level1.tmx", pygame.Color(224, 43, 155), 'thief', 4))
+lm1 = LevelManager(Level(screen_size, TILE_SIZE, "./Levels/level1 1.tmx", pygame.Color(235, 113, 26), "hecker", 3), Level(screen_size, TILE_SIZE, "./Levels/level1 2.tmx", pygame.Color(68, 235, 26), 'soldier', 5), Level(screen_size, TILE_SIZE, "./Levels/level1 3.tmx", pygame.Color(24, 107, 222), 'scientist', 3), Level(screen_size, TILE_SIZE, "./Levels/level1 4.tmx", pygame.Color(224, 43, 155), 'thief', 3))
 lvl_dict = {"orange": 0, "green": 1, "blue": 2, "pink": 3}
 
 def collision_test(rect, tiles):
@@ -64,13 +64,14 @@ vertical_speed = 0
 horizontal_speed = 0
 onGround=False
 running = True
+onWall  = False
 while running:
     dt = clock.tick(60)
     lm1.levels[lm1.levelInd].c1.add_scroll(lm1.levels[lm1.levelInd].p1.getRect(), TILE_SIZE)
 
 
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_w] and onGround:
+    if keys[pygame.K_w] and (onGround or (lm1.levels[lm1.levelInd].p1.ability == 'thief' and onWall)):
         vertical_speed = -1.75
         onGround = False
     elif keys[pygame.K_s]:
@@ -110,7 +111,6 @@ while running:
     door_layer = lm1.levels[lm1.levelInd].level.layers[3]
     teleport_layer = lm1.levels[lm1.levelInd].level.layers[4]
     shard_layer = lm1.levels[lm1.levelInd].level.layers[5]
-    
 
 
     for x, y, surf in background_layer.tiles():
@@ -123,12 +123,10 @@ while running:
 
     for obj in obj_layer:
         screen.blit(obj.image, dest=(obj.x - lm1.levels[lm1.levelInd].c1.pos[0], obj.y - lm1.levels[lm1.levelInd].c1.pos[1]))
-        obj_rect.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
-        obj_dict[obj.name] = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
     
     for door in door_layer:
         screen.blit(door.image, dest=(door.x - lm1.levels[lm1.levelInd].c1.pos[0], door.y - lm1.levels[lm1.levelInd].c1.pos[1]))
-        if door.properties['Passable'] != lm1.levels[lm1.levelInd].p1.ability:
+        if door.properties['Passable'] != lm1.levels[lm1.levelInd].p1.ability and door.properties['Passable'] != 'all':
             tile_rect.append(pygame.Rect(door.x, door.y, door.width, door.height))
 
     for teleporter in teleport_layer:
@@ -137,10 +135,11 @@ while running:
         teleporter_dict[(int(teleporter.x), int(teleporter.y))] = teleporter
 
     
-    hit_list = collision_test(lm1.levels[lm1.levelInd].p1.rectangle, obj_rect)
+    hit_list = collision_test(lm1.levels[lm1.levelInd].p1.rectangle, lm1.levels[lm1.levelInd].obj_rect)
     teleporter_hit_list = collision_test(lm1.levels[lm1.levelInd].p1.rectangle, teleporter_rect)
     lm1.levels[lm1.levelInd].p1.rectangle, collisions = move(lm1.levels[lm1.levelInd].p1.getRect(), lm1.levels[lm1.levelInd].p1.speed * lm1.levels[lm1.levelInd].p1.speedMultiplier, tile_rect)
 
+    #print(obj_dict)
 
     
     for event in pygame.event.get():
@@ -155,17 +154,23 @@ while running:
                 lm1.nextLevel()
             if event.key == pygame.K_k:
                 if len(hit_list) > 0:
-                    for key, value in obj_dict.items():
-                        if hit_list[0].x == value.x and hit_list[0].y == value.y:
-                            lm1.levels[lvl_dict[key]].p1.rectangle
-                            hit_list_2 = collision_test(lm1.levels[lvl_dict[key]].p1.rectangle, obj_rect)
-                            if len(hit_list_2) > 0:
-                                for key2, value2 in obj_dict.items():
-                                    if hit_list[0].x == value.x and hit_list[0].y == value.y:
-                                        if lvl_dict[key2] == lm1.levelInd:
-                                            lm1.swapPlayers(lvl_dict[key], lvl_dict[key2])
-                                            break
-                            break
+                    print("1")
+                    for key, values in lm1.levels[lm1.levelInd].obj_dict.items():
+                        for value in values:
+                            if hit_list[0].x == value.x and hit_list[0].y == value.y:
+                                hit_list_2 = collision_test(lm1.levels[lvl_dict[key]].p1.rectangle, lm1.levels[lvl_dict[key]].obj_rect)
+                                if len(hit_list_2) > 0:
+                                    print("2")
+                                    for key2, value2 in lm1.levels[lvl_dict[key]].obj_dict.items():
+                                        if hit_list[0].x == value.x and hit_list[0].y == value.y:
+                                            print("3")
+                                            print(key2)
+                                            print(lvl_dict[key2], lm1.levelInd)
+                                            if lvl_dict[key2] == lm1.levelInd:
+                                                lm1.swapPlayers(lvl_dict[key], lvl_dict[key2])
+                                                print("4")
+                                                break
+                                break
             if event.key == pygame.K_e:
                 if lm1.levels[lm1.levelInd].p1.ability == 'scientist':
                     for re in teleporter_hit_list:
@@ -182,6 +187,10 @@ while running:
         onGround = True
         lm1.levels[lm1.levelInd].p1.set_speed(np.array([lm1.levels[lm1.levelInd].p1.speed[0], 0]))
 
+    if collisions['left'] or collisions['right']:
+        onWall = True
+    else:
+        onWall = False
 
 
      

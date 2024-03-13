@@ -1,0 +1,104 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "Levels/level1.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "Assets/tilesets/door.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "Assets/tilesets/portal blue.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "Assets/tilesets/portal green.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "Assets/tilesets/portal orange.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "Assets/tilesets/portal pink.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "Assets/tilesets/portals.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Assets/tilesets/shard.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "Assets/tilesets/teleporter.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "Assets/tilesets/testtileset.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1.5,
+            "scaleInEditor": 1
+        },
+        "Assets/tilesets/tileset.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Industrial tileset.tsx": {
+            "scaleInDock": 1.5,
+            "scaleInEditor": 1
+        },
+        "Levels/level1.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 591.3333333333334,
+                "y": 279.33333333333337
+            }
+        },
+        "Levels/test1.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 620.6666666666665,
+                "y": 423.33333333333337
+            }
+        },
+        "Levels/test2.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 622.6666666666666,
+                "y": 842.6666666666665
+            }
+        }
+    },
+    "last.imagePath": "C:/Users/Shubham Mate/OneDrive/Desktop/Programming/Python/Technex Game Jam",
+    "map.height": 25,
+    "map.lastUsedFormat": "tmx",
+    "map.width": 120,
+    "openFiles": [
+        "Levels/level1.tmx"
+    ],
+    "project": "untitled.tiled-project",
+    "recentFiles": [
+        "Levels/level1.tmx",
+        "testtileset.tsx",
+        "test2.tmx",
+        "portals.tsx",
+        "tileset.tsx",
+        "level1.tmx",
+        "Industrial tileset.tsx",
+        "test1.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.type": 1
+}

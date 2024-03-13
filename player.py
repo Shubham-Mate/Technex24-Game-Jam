@@ -12,7 +12,7 @@ class Player:
         self.rectangle = pygame.Rect(pos[0], pos[1], size[0], size[1])
         self.speedMultiplier = sm
         self.ability = ability
-        self.sprite = pygame.image.load(f"./{ability}.png")
+        self.sprite = pygame.image.load(f"./Assets/Images/{ability}.png")
 
     def set_speed(self, speed):
         self.speed = speed
