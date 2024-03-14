@@ -30,12 +30,18 @@ pygame.display.set_caption("Dimensional Drifters")
  
 # clock is used to set a max fps
 clock = pygame.time.Clock()
+game_music = pygame.mixer.music.load("")
+jump_s = pygame.mixer.Sound("assets/sounds/jump.mp3")
+door_s = pygame.mixer.Sound("assets/sounds/door.mp3")
+thump_s = pygame.mixer.Sound("assets/sounds/thump.mp3")
+portal_s = pygame.mixer.Sound("assets/sounds/portal.mp3")
+button_s = pygame.mixer.Sound("assets/sounds/button.mp3")
 
 # Gravity
 GRAVITY = 3
 
 # Set GameState
-gamestate = 'completed'
+gamestate = 'menu'
 
 # Create the level manager
 lm1 = LevelManager(Level(screen_size, TILE_SIZE, "./Levels/level1 1.tmx", pygame.Color(235, 113, 26), "hecker", 3), Level(screen_size, TILE_SIZE, "./Levels/level1 2.tmx", pygame.Color(68, 235, 26), 'soldier', 5), Level(screen_size, TILE_SIZE, "./Levels/level1 3.tmx", pygame.Color(24, 107, 222), 'scientist', 3), Level(screen_size, TILE_SIZE, "./Levels/level1 4.tmx", pygame.Color(224, 43, 155), 'thief', 3))
@@ -79,6 +85,8 @@ def button(msg, x, y, w, h, ic, ac, action=None):
     global gamestate, lm1
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
+
+    button_s.play()
 
     # Check if mouse is over the button
     if x + w > mouse[0] > x and y + h > mouse[1] > y:
@@ -160,15 +168,21 @@ def options():
             pygame.quit()
             sys.exit()
         if event.type == pygame.MOUSEBUTTONDOWN:
+            button_s.play()
             if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
                 gamestate = 'menu'
         if event.type == pygame.VIDEORESIZE:
             screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
     pygame.display.update()
 
+
+    
+
 def main_menu():
     global gamestate, lm1
     screen.blit(BG, (0, 0))
+
+    pygame.mixer.music.play(-1)
 
     MENU_MOUSE_POS = pygame.mouse.get_pos()
 
@@ -193,12 +207,14 @@ def main_menu():
             pygame.quit()
             sys.exit()
         if event.type == pygame.MOUSEBUTTONDOWN:
+            button_s.play()
             if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                 lm1 = LevelManager(Level(screen_size, TILE_SIZE, "./Levels/level1 1.tmx", pygame.Color(235, 113, 26), "hecker", 3), Level(screen_size, TILE_SIZE, "./Levels/level1 2.tmx", pygame.Color(68, 235, 26), 'soldier', 5), Level(screen_size, TILE_SIZE, "./Levels/level1 3.tmx", pygame.Color(24, 107, 222), 'scientist', 3), Level(screen_size, TILE_SIZE, "./Levels/level1 4.tmx", pygame.Color(224, 43, 155), 'thief', 3))
                 gamestate = 'level'
             if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                 gamestate = 'options'
             if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
+                button_s.play()
                 pygame.quit()
                 sys.exit()
 
@@ -223,10 +239,12 @@ def play():
 
     
     keys = pygame.key.get_pressed()
-    if not(lm1.levels[lm1.levelInd].completed):
+    if not (lm1.levels[lm1.levelInd].completed):
         if keys[pygame.K_w] and (onGround or (lm1.levels[lm1.levelInd].p1.ability == 'thief' and onWall)):
             vertical_speed = -1.75
+            jump_s.play()
             onGround = False
+            
         elif keys[pygame.K_s]:
             vertical_speed = 1
         else:
@@ -278,6 +296,7 @@ def play():
     
     for door in door_layer:
         screen.blit(door.image, dest=(door.x - lm1.levels[lm1.levelInd].c1.pos[0], door.y - lm1.levels[lm1.levelInd].c1.pos[1]))
+        door_s.play()
         if door.properties['Passable'] != lm1.levels[lm1.levelInd].p1.ability and door.properties['Passable'] != 'all':
             tile_rect.append(pygame.Rect(door.x, door.y, door.width, door.height))
 
@@ -285,6 +304,7 @@ def play():
         screen.blit(teleporter.image, dest=(teleporter.x - lm1.levels[lm1.levelInd].c1.pos[0], teleporter.y - lm1.levels[lm1.levelInd].c1.pos[1]))
         teleporter_rect.append(pygame.Rect(teleporter.x, teleporter.y, teleporter.width, teleporter.height))
         teleporter_dict[(int(teleporter.x), int(teleporter.y))] = teleporter
+        portal_s.play()
 
     if not(lm1.levels[lm1.levelInd].completed):
         for shard in shard_layer:
@@ -347,6 +367,7 @@ def play():
 
     if collisions['bottom']:
         onGround = True
+        thump_s.play()
         lm1.levels[lm1.levelInd].p1.set_speed(np.array([lm1.levels[lm1.levelInd].p1.speed[0], 0]))
 
     if collisions['left'] or collisions['right']:
@@ -378,10 +399,11 @@ def completed():
     screen.blit(COMPLETED_TEXT, COMPLETED_RECT)
     screen.blit(ENTER_TEXT, ENTER_RECT)
 
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_RETURN]:
-        gamestate = 'menu' 
-    pygame.display.update()
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN:
+                gamestate = 'menu' 
+    pygame.display.flip()
     clock.tick(60)
         
 
