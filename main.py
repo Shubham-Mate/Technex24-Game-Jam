@@ -41,9 +41,11 @@ GRAVITY = 3
 
 # Set GameState
 gamestate = 'menu'
+currentLevel = 0
 
 # Create the level manager
-lm1 = LevelManager(Level(screen_size, TILE_SIZE, "./Levels/level1 1.tmx", pygame.Color(235, 113, 26), "hecker", 3), Level(screen_size, TILE_SIZE, "./Levels/level1 2.tmx", pygame.Color(68, 235, 26), 'soldier', 5), Level(screen_size, TILE_SIZE, "./Levels/level1 3.tmx", pygame.Color(24, 107, 222), 'scientist', 3), Level(screen_size, TILE_SIZE, "./Levels/level1 4.tmx", pygame.Color(224, 43, 155), 'thief', 3))
+lm1 = LevelManager(Level(screen_size, TILE_SIZE, "./Levels/level 1 1.tmx", pygame.Color(235, 113, 26), "hecker", 3), Level(screen_size, TILE_SIZE, "./Levels/level 1 2.tmx", pygame.Color(68, 235, 26), 'soldier', 5), Level(screen_size, TILE_SIZE, "./Levels/level 1 3.tmx", pygame.Color(24, 107, 222), 'scientist', 3), Level(screen_size, TILE_SIZE, "./Levels/level 1 4.tmx", pygame.Color(224, 43, 155), 'thief', 3))
+
 lvl_dict = {"orange": 0, "green": 1, "blue": 2, "pink": 3}
 def text_objects(text,font):
     textsurface=font.render(text,True,BLACK)
@@ -81,7 +83,7 @@ def paused():
 
 
 def button(msg, x, y, w, h, ic, ac, action=None):
-    global gamestate, lm1, last_time
+    global gamestate, last_time, lm1, currentLevel
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
 
@@ -91,7 +93,7 @@ def button(msg, x, y, w, h, ic, ac, action=None):
         if click[0] == 1 and action is not None:
             button_s.play()
             if action == "play":
-                lm1 = LevelManager(Level(screen_size, TILE_SIZE, "./Levels/level1 1.tmx", pygame.Color(235, 113, 26), "hecker", 3), Level(screen_size, TILE_SIZE, "./Levels/level1 2.tmx", pygame.Color(68, 235, 26), 'soldier', 5), Level(screen_size, TILE_SIZE, "./Levels/level1 3.tmx", pygame.Color(24, 107, 222), 'scientist', 3), Level(screen_size, TILE_SIZE, "./Levels/level1 4.tmx", pygame.Color(224, 43, 155), 'thief', 3))
+                lm1 = LevelManager(Level(screen_size, TILE_SIZE, f"./Levels/level {currentLevel} 1.tmx", pygame.Color(235, 113, 26), "hecker", 3), Level(screen_size, TILE_SIZE, f"./Levels/level {currentLevel} 2.tmx", pygame.Color(68, 235, 26), 'soldier', 5), Level(screen_size, TILE_SIZE, f"./Levels/level {currentLevel} 3.tmx", pygame.Color(24, 107, 222), 'scientist', 3), Level(screen_size, TILE_SIZE, f"./Levels/level {currentLevel} 4.tmx", pygame.Color(224, 43, 155), 'thief', 3))
                 last_time = time.time()
                 gamestate = 'level'
             elif action == "quit":
@@ -175,8 +177,49 @@ def options():
             screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
     pygame.display.update()
 
+def level_select():
+    global screen, gamestate, last_time, lm1, currentLevel
+    
+    screen.blit(BG, (0, 0))
+
+    LS_MOUSE_POS = pygame.mouse.get_pos()
+    LS_TEXT = get_font(80).render("SELECT LEVEL", True, "#FFBD00")
+    LS_RECT = LS_TEXT.get_rect(center=(screen.get_width() / 2, screen.get_height() / 6))
+
+    L1_BUTTON = Button(image=pygame.image.load("assets/images/Rect.png"), pos=(screen.get_width() / 2 - 300, (screen.get_height() / 2)), 
+                         text_input="LEVEL 1", font=get_font(85), base_color="#d7fcd4", hovering_color="GREEN")
+    L2_BUTTON = Button(image=pygame.image.load("assets/images/Rect.png"), pos=(screen.get_width() / 2 + 300, (screen.get_height() / 2)), 
+                        text_input="LEVEL 2", font=get_font(85), base_color="#d7fcd4", hovering_color="RED")
+
+    screen.blit(LS_TEXT, LS_RECT)
+
+    for button in [L1_BUTTON, L2_BUTTON]:
+        button.changeColor(LS_MOUSE_POS)
+        button.update(screen)
+    
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            button_s.play()
+            if L1_BUTTON.checkForInput(LS_MOUSE_POS):
+                game_music.stop()
+                lm1 = LevelManager(Level(screen_size, TILE_SIZE, "./Levels/level 1 1.tmx", pygame.Color(235, 113, 26), "hecker", 3), Level(screen_size, TILE_SIZE, "./Levels/level 1 2.tmx", pygame.Color(68, 235, 26), 'soldier', 5), Level(screen_size, TILE_SIZE, "./Levels/level 1 3.tmx", pygame.Color(24, 107, 222), 'scientist', 3), Level(screen_size, TILE_SIZE, "./Levels/level 1 4.tmx", pygame.Color(224, 43, 155), 'thief', 3))
+                last_time = time.time()
+                currentLevel = 1
+                gamestate = 'level'
+            if L2_BUTTON.checkForInput(LS_MOUSE_POS):
+                game_music.stop()
+                lm1 = LevelManager(Level(screen_size, TILE_SIZE, "./Levels/level 2 1.tmx", pygame.Color(235, 113, 26), "hecker", 3), Level(screen_size, TILE_SIZE, "./Levels/level 2 2.tmx", pygame.Color(68, 235, 26), 'soldier', 5), Level(screen_size, TILE_SIZE, "./Levels/level 2 3.tmx", pygame.Color(24, 107, 222), 'scientist', 3), Level(screen_size, TILE_SIZE, "./Levels/level 2 4.tmx", pygame.Color(224, 43, 155), 'thief', 3))
+                last_time = time.time()
+                currentLevel = 2
+                gamestate = 'level'
+
+    pygame.display.update()
+
 def main_menu():
-    global gamestate, lm1, last_time
+    global gamestate
     screen.blit(BG, (0, 0))
 
     game_music.play()
@@ -206,10 +249,7 @@ def main_menu():
         if event.type == pygame.MOUSEBUTTONDOWN:
             button_s.play()
             if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
-                game_music.stop()
-                lm1 = LevelManager(Level(screen_size, TILE_SIZE, "./Levels/level1 1.tmx", pygame.Color(235, 113, 26), "hecker", 3), Level(screen_size, TILE_SIZE, "./Levels/level1 2.tmx", pygame.Color(68, 235, 26), 'soldier', 5), Level(screen_size, TILE_SIZE, "./Levels/level1 3.tmx", pygame.Color(24, 107, 222), 'scientist', 3), Level(screen_size, TILE_SIZE, "./Levels/level1 4.tmx", pygame.Color(224, 43, 155), 'thief', 3))
-                last_time = time.time()
-                gamestate = 'level'
+                gamestate = 'level_select'
             if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                 gamestate = 'options'
             if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
@@ -403,6 +443,8 @@ while True:
         main_menu()
     if gamestate == 'options':
         options()
+    if gamestate == 'level_select':
+        level_select()
     if gamestate == 'level':
         play()
     if gamestate == 'pause':
