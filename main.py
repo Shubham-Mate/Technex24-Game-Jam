@@ -81,7 +81,7 @@ def paused():
 
 
 def button(msg, x, y, w, h, ic, ac, action=None):
-    global gamestate, lm1
+    global gamestate, lm1, last_time
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
 
@@ -92,6 +92,7 @@ def button(msg, x, y, w, h, ic, ac, action=None):
             button_s.play()
             if action == "play":
                 lm1 = LevelManager(Level(screen_size, TILE_SIZE, "./Levels/level1 1.tmx", pygame.Color(235, 113, 26), "hecker", 3), Level(screen_size, TILE_SIZE, "./Levels/level1 2.tmx", pygame.Color(68, 235, 26), 'soldier', 5), Level(screen_size, TILE_SIZE, "./Levels/level1 3.tmx", pygame.Color(24, 107, 222), 'scientist', 3), Level(screen_size, TILE_SIZE, "./Levels/level1 4.tmx", pygame.Color(224, 43, 155), 'thief', 3))
+                last_time = time.time()
                 gamestate = 'level'
             elif action == "quit":
                 pygame.quit()
@@ -101,6 +102,7 @@ def button(msg, x, y, w, h, ic, ac, action=None):
             elif action == "pause":
                 gamestate = 'pause'
             elif action == "continue":
+                last_time = time.time()
                 gamestate = 'level'
     else:
         pygame.draw.rect(screen, ic, (x, y, w, h))  # Draw button with inactive color
@@ -172,9 +174,6 @@ def options():
         if event.type == pygame.VIDEORESIZE:
             screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
     pygame.display.update()
-
-
-    
 
 def main_menu():
     global gamestate, lm1, last_time
