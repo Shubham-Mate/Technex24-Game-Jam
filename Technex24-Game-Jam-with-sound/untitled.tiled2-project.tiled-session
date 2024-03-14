@@ -1,0 +1,151 @@
+{
+    "activeFile": "Levels/level1 1.tmx",
+    "expandedProjectPaths": [
+        "Assets",
+        ".",
+        "Assets/tilesets",
+        "Levels"
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "Assets/tilesets/door.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Assets/tilesets/portal blue.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Assets/tilesets/portal green.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Assets/tilesets/portal orange.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Assets/tilesets/portal pink.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Assets/tilesets/portals.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Assets/tilesets/shard.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Assets/tilesets/teleporter.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Assets/tilesets/tileset.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Levels/level1 1.tmx": {
+            "expandedObjectLayers": [
+                4
+            ],
+            "scale": 0.75,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 1352.6666666666665,
+                "y": 550
+            }
+        },
+        "Levels/level1 2.tmx": {
+            "expandedObjectLayers": [
+                3,
+                5,
+                4
+            ],
+            "scale": 0.75,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 2040.6666666666665,
+                "y": 351.33333333333337
+            }
+        },
+        "Levels/level1 3.tmx": {
+            "expandedObjectLayers": [
+                3,
+                5,
+                4
+            ],
+            "scale": 0.75,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 1442,
+                "y": 351.33333333333337
+            }
+        },
+        "Levels/level1 4.tmx": {
+            "expandedObjectLayers": [
+                3,
+                5,
+                4
+            ],
+            "scale": 0.75,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 1663.333333333333,
+                "y": 454
+            }
+        },
+        "Levels/level1.tmx": {
+            "expandedObjectLayers": [
+                4
+            ],
+            "scale": 0.75,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 682,
+                "y": 376.6666666666667
+            }
+        },
+        "Levels/test1.tmx": {
+            "scale": 0.7018125,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 640.4844598806662,
+                "y": 400.3918425505388
+            }
+        },
+        "Levels/testtileset.tsx": {
+            "scaleInDock": 1
+        }
+    },
+    "openFiles": [
+        "Levels/level1 1.tmx",
+        "Levels/level1 2.tmx",
+        "Levels/level1 3.tmx",
+        "Levels/level1 4.tmx",
+        "Assets/tilesets/portal orange.tsx",
+        "Assets/tilesets/portal green.tsx"
+    ],
+    "project": "untitled.tiled2-project.tiled-project",
+    "recentFiles": [
+        "Assets/tilesets/portal green.tsx",
+        "Assets/tilesets/portal orange.tsx",
+        "Levels/level1 4.tmx",
+        "Levels/level1 3.tmx",
+        "Levels/level1 2.tmx",
+        "Levels/level1 1.tmx",
+        "Assets/tilesets/tileset.tsx",
+        "Assets/tilesets/teleporter.tsx",
+        "Assets/tilesets/shard.tsx",
+        "Assets/tilesets/portal pink.tsx",
+        "Assets/tilesets/portal blue.tsx",
+        "Assets/tilesets/door.tsx"
+    ]
+}
