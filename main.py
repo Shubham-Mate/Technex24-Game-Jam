@@ -210,6 +210,7 @@ def main_menu():
             button_s.play()
             if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                 lm1 = LevelManager(Level(screen_size, TILE_SIZE, "./Levels/level1 1.tmx", pygame.Color(235, 113, 26), "hecker", 3), Level(screen_size, TILE_SIZE, "./Levels/level1 2.tmx", pygame.Color(68, 235, 26), 'soldier', 5), Level(screen_size, TILE_SIZE, "./Levels/level1 3.tmx", pygame.Color(24, 107, 222), 'scientist', 3), Level(screen_size, TILE_SIZE, "./Levels/level1 4.tmx", pygame.Color(224, 43, 155), 'thief', 3))
+                last_time = time.time()
                 gamestate = 'level'
             if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                 gamestate = 'options'
