@@ -19,7 +19,7 @@ class Level:
                          'blue': [],
                          'pink': [],
                          'green': []}
-
+        self.completed = False
         self.populate_obj_rect()
 
     def populate_obj_rect(self):
@@ -52,6 +52,11 @@ class LevelManager:
         self.levels[ind2].p1 = temp1
         self.levels[ind1].p1.rectangle = temp1_rect
         self.levels[ind2].p1.rectangle = temp2_rect
+
+    def checkCompleted(self):
+        res = all([l.completed for l in self.levels])
+        if res:
+            return True
 
     
 
