@@ -5,6 +5,7 @@ from level import Level
 from camera import Camera
 from level import LevelManager
 from button import Button
+import time
  
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -34,7 +35,7 @@ clock = pygame.time.Clock()
 GRAVITY = 3
 
 # Set GameState
-gamestate = 'menu'
+gamestate = 'completed'
 
 # Create the level manager
 lm1 = LevelManager(Level(screen_size, TILE_SIZE, "./Levels/level1 1.tmx", pygame.Color(235, 113, 26), "hecker", 3), Level(screen_size, TILE_SIZE, "./Levels/level1 2.tmx", pygame.Color(68, 235, 26), 'soldier', 5), Level(screen_size, TILE_SIZE, "./Levels/level1 3.tmx", pygame.Color(24, 107, 222), 'scientist', 3), Level(screen_size, TILE_SIZE, "./Levels/level1 4.tmx", pygame.Color(224, 43, 155), 'thief', 3))
@@ -44,6 +45,7 @@ def text_objects(text,font):
     return textsurface,textsurface.get_rect()
 
 pause = False
+last_time = time.time()
 
 def paused():
     global pause
@@ -210,11 +212,13 @@ onWall  = False
 
 
 def play():
-    global screen, onGround, gamestate, onWall
-    running = True
-    global pause
+    global screen, onGround, gamestate, onWall, pause, last_time
     
-    dt = clock.tick(60)
+    now = time.time()
+    dt = now - last_time
+    dt *= 60
+    last_time = time.time()
+
     lm1.levels[lm1.levelInd].c1.add_scroll(lm1.levels[lm1.levelInd].p1.getRect(), TILE_SIZE)
 
     
@@ -242,7 +246,7 @@ def play():
     if lm1.levels[lm1.levelInd].p1.speed[1] >= 6:
         lm1.levels[lm1.levelInd].p1.set_speed(np.array([lm1.levels[lm1.levelInd].p1.speed[0], lm1.levels[lm1.levelInd].p1.speed[1]]))
     else:
-        lm1.levels[lm1.levelInd].p1.set_speed(np.array([lm1.levels[lm1.levelInd].p1.speed[0], lm1.levels[lm1.levelInd].p1.speed[1] + (GRAVITY * dt/1000)]))
+        lm1.levels[lm1.levelInd].p1.set_speed(np.array([lm1.levels[lm1.levelInd].p1.speed[0], lm1.levels[lm1.levelInd].p1.speed[1] + (GRAVITY * dt/60)]))
 
     
 
@@ -251,9 +255,7 @@ def play():
 
     # Draw the level
     tile_rect = []
-    obj_rect = []
     teleporter_rect = []
-    obj_dict = {}
     teleporter_dict = {}
     background_layer = lm1.levels[lm1.levelInd].level.layers[0]
     tile_layer = lm1.levels[lm1.levelInd].level.layers[1]
@@ -287,11 +289,15 @@ def play():
     if not(lm1.levels[lm1.levelInd].completed):
         for shard in shard_layer:
             screen.blit(shard.image, dest=(shard.x - lm1.levels[lm1.levelInd].c1.pos[0], shard.y - lm1.levels[lm1.levelInd].c1.pos[1]))
-
+            shard_hit_list = collision_test(lm1.levels[lm1.levelInd].p1.rectangle, [pygame.Rect(shard.x, shard.y, shard.width, shard.height)])
+            if len(shard_hit_list) > 0:
+                lm1.levels[lm1.levelInd].completed = True
+                if (lm1.checkCompleted()):
+                    gamestate = 'completed'
     
     hit_list = collision_test(lm1.levels[lm1.levelInd].p1.rectangle, lm1.levels[lm1.levelInd].obj_rect)
     teleporter_hit_list = collision_test(lm1.levels[lm1.levelInd].p1.rectangle, teleporter_rect)
-    lm1.levels[lm1.levelInd].p1.rectangle, collisions = move(lm1.levels[lm1.levelInd].p1.getRect(), lm1.levels[lm1.levelInd].p1.speed * lm1.levels[lm1.levelInd].p1.speedMultiplier, tile_rect)
+    lm1.levels[lm1.levelInd].p1.rectangle, collisions = move(lm1.levels[lm1.levelInd].p1.getRect(), lm1.levels[lm1.levelInd].p1.speed * lm1.levels[lm1.levelInd].p1.speedMultiplier * dt, tile_rect)
 
 
     
@@ -357,6 +363,26 @@ def play():
 
     # flip() updates the screen to make our changes visible
     pygame.display.flip()
+
+def completed():
+    global gamestate, lm1
+    screen.blit(BG, (0, 0))
+
+
+    COMPLETED_TEXT = get_font(80).render("Level Complete", True, "#FFBD00")
+    COMPLETED_RECT = COMPLETED_TEXT.get_rect(center=(screen.get_width() / 2, screen.get_height() / 6))
+
+    ENTER_TEXT = get_font(60).render("Press Enter to continue", True, "#FFBD00")
+    ENTER_RECT = ENTER_TEXT.get_rect(center=(screen.get_width() / 2, screen.get_height() / 2))
+
+    screen.blit(COMPLETED_TEXT, COMPLETED_RECT)
+    screen.blit(ENTER_TEXT, ENTER_RECT)
+
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_RETURN]:
+        gamestate = 'menu' 
+    pygame.display.update()
+    clock.tick(60)
         
 
 while True:
@@ -368,3 +394,5 @@ while True:
         play()
     if gamestate == 'pause':
         paused()
+    if gamestate == 'completed':
+        completed()
